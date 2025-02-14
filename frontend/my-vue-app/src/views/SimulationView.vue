@@ -1,9 +1,21 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
-import { useStore } from "vuex";
+import { ref } from "vue";
 import ForestGrid from "../components/ForestGrid.vue";
 
-import { startSimulation, restartSimulation, stopSimulation } from "../socket";
+import {
+  startSimulation,
+  restartSimulation,
+  stopSimulation,
+} from "../socket/socket"; // Importing socket functions
+
+// Track if the start button should be disabled
+const isStartDisabled = ref(false);
+
+// Handle the click event for the start button
+const handleStartClick = () => {
+  isStartDisabled.value = true; // Disable button after click
+  startSimulation(); // Start the simulation
+};
 </script>
 
 <template>
@@ -13,11 +25,18 @@ import { startSimulation, restartSimulation, stopSimulation } from "../socket";
     <!-- Forest Grid Section -->
     <div class="forest-grid-container">
       <ForestGrid />
+      <!-- Embed the ForestGrid component -->
     </div>
 
     <!-- Button Container -->
     <div class="button-container">
-      <button class="button start-btn" @click="startSimulation">Start</button>
+      <button
+        class="button start-btn"
+        @click="handleStartClick"
+        :disabled="isStartDisabled"
+      >
+        Start
+      </button>
       <button class="button restart-btn" @click="restartSimulation">
         Restart
       </button>
@@ -67,7 +86,7 @@ h1 {
   margin-top: 30px;
 }
 
-/* Style général des boutons */
+/* General button style */
 .button {
   padding: 12px 28px;
   font-size: 16px;
@@ -80,10 +99,16 @@ h1 {
   text-transform: uppercase;
   letter-spacing: 0.8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  background: linear-gradient(135deg, #3a3f47, #2a2f36); /* Gris élégant */
+  background: linear-gradient(135deg, #3a3f47, #2a2f36); /* Elegant gray */
 }
 
-/* Start Button - Vert profond */
+.button:disabled {
+  background: gray;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Start Button - Deep green */
 .start-btn {
   background: linear-gradient(135deg, #2e7d32, #1b5e20);
 }
@@ -93,7 +118,7 @@ h1 {
   transform: translateY(-2px);
 }
 
-/* Restart Button - Bleu-gris */
+/* Restart Button - Blue-gray */
 .restart-btn {
   background: linear-gradient(135deg, #546e7a, #37474f);
 }
@@ -103,7 +128,7 @@ h1 {
   transform: translateY(-2px);
 }
 
-/* Stop Button - Rouge bordeaux */
+/* Stop Button - Bordeaux red */
 .stop-btn {
   background: linear-gradient(135deg, #8e2323, #5e1616);
 }
@@ -113,7 +138,7 @@ h1 {
   transform: translateY(-2px);
 }
 
-/* Effet de clic */
+/* Click effect */
 .button:active {
   transform: scale(0.95);
 }

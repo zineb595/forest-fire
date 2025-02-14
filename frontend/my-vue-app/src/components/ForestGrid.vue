@@ -12,21 +12,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useStore } from "vuex";
-import { state } from "../socket";
+import { state } from "../socket/socket";
 
-// Function to apply different styles based on cell value
+// Function to determine the CSS class for a cell
 const getCellClass = (cell: number) => {
   switch (cell) {
     case 0:
-      return "empty"; // Empty cell
+      return "empty"; // Represents an empty cell
     case 1:
-      return "tree"; // Tree cell
+      return "tree"; // Represents a tree
     case 2:
-      return "fire"; // Fire cell
+      return "fire"; // Represents fire
     case 3:
-      return "ashes"; // Ashes cell
+      return "ashes"; // Represents ashes after burning
     default:
       return "";
   }
@@ -34,8 +32,7 @@ const getCellClass = (cell: number) => {
 </script>
 
 <style scoped>
-/* Example styles for different cell types */
-
+/* Grid container */
 .forest-grid {
   display: flex;
   grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
@@ -43,25 +40,56 @@ const getCellClass = (cell: number) => {
   justify-content: center;
 }
 
+/* Cell styling */
 .cell {
-  width: 10px; /* Fixed width of each cell */
-  height: 10px; /* Fixed height of each cell */
-  border: 0.0001px solid #ccc; /* Border around each cell */
+  width: 10px;
+  height: 10px;
+  border: 0.0001px solid #ccc;
 }
 
+/* Different cell types */
 .empty {
-  background-color: white;
+  background-color: burlywood;
 }
 
 .tree {
-  background-color: green;
+  background: url("@/assets/cell-styles/tree.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .fire {
+  position: relative;
   background-color: red;
 }
 
+/* Fire overlay effect */
+.fire::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("@/assets/cell-styles/fire.png") center/contain no-repeat;
+  opacity: 0.9;
+}
+
 .ashes {
-  background-color: gray;
+  position: relative;
+  background-color: grey;
+}
+
+/* Burnt tree overlay effect */
+.ashes::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("@/assets/cell-styles/burnt-tree.jpg") center/contain
+    no-repeat;
 }
 </style>
